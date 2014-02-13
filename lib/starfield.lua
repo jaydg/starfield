@@ -37,7 +37,7 @@ function Starfield:init( count, speed, x, y )
    end
 end
 
-function Starfield:moveCartesian(dt, vertical, horizontal)
+function Starfield:updateCartesian(dt, vertical, horizontal)
     vertical = vertical or 0
     horizontal = horizontal or 0
 
@@ -69,7 +69,7 @@ function Starfield:moveCartesian(dt, vertical, horizontal)
     end
 end
 
-function Starfield:movePolar(dt)
+function Starfield:updatePolar(dt)
     self.dtotal = self.dtotal + dt
 
     if self.dtotal < self.speed then
