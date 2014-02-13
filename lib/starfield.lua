@@ -9,24 +9,35 @@ function Starfield:init( count, speed, x, y )
     self.speed = speed or 0.05
 
     self.dtotal = 0
+    -- required for polar starfields
+    self.center_x = self.x / 2
+    self.center_y = self.y / 2
+    self.max_distance = math.sqrt(self.center_x * self.center_x
+        + self.center_y + self.center_y)
+
     self.stars = {}
 
     for i=1, count do
         self.stars[i] = {
-            x = math.random(5, self.x - 5),
-            y = math.random(5, self.y - 5),
-            velocity = math.random(3),
-            size = math.random(3),
+            velocity = love.math.random(3),
+            size = love.math.random(3),
+            x = love.math.random(5, self.x - 5),
+            y = love.math.random(5, self.y - 5),
+
+            -- polar starfield only:
+            angle = math.pi * 2 * love.math.random(),
+            distance = love.math.random() * self.max_distance,
+
             color = {
-                math.random(150, 255),
-                math.random(150, 255),
-                math.random(150, 255)
+                love.math.random(150, 255),
+                love.math.random(150, 255),
+                love.math.random(150, 255)
             }
         }
    end
 end
 
-function Starfield:move(dt, vertical, horizontal)
+function Starfield:moveCartesian(dt, vertical, horizontal)
     vertical = vertical or 0
     horizontal = horizontal or 0
 
@@ -54,6 +65,29 @@ function Starfield:move(dt, vertical, horizontal)
             self.stars[i].y = 0
         elseif horizontal < 0 and self.stars[i].y < 0 then
             self.stars[i].y = self.y
+        end
+    end
+end
+
+function Starfield:movePolar(dt)
+    self.dtotal = self.dtotal + dt
+
+    if self.dtotal < self.speed then
+        -- no time to update the stars yet..
+        return
+    else
+        self.dtotal = self.dtotal - self.speed
+    end
+
+    for i=1, #self.stars do
+        self.stars[i].x = self.center_x + self.stars[i].distance
+            * math.sin(self.stars[i].angle)
+        self.stars[i].y = self.center_y + self.stars[i].distance
+            * math.cos(self.stars[i].angle)
+
+        self.stars[i].distance = self.stars[i].distance + 1
+        if self.stars[i].distance > self.max_distance then
+            self.stars[i].distance = 10
         end
     end
 end

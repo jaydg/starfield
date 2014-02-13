@@ -13,7 +13,7 @@ function love.draw()
 end
 
 function love.update(dt)
-    stars:move(dt, 1)
+    stars:moveCartesian(dt, move_x, move_y)
 
     dtotal = dtotal + dt
     if dtotal > 3 then
