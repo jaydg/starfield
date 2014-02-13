@@ -42,14 +42,18 @@ function Starfield:move(dt, vertical, horizontal)
     for i=1, #self.stars do
         -- horizontal movement
         self.stars[i].x = self.stars[i].x + vertical * self.stars[i].velocity
-        if self.stars[i].x > self.x then
+        if vertical > 0 and self.stars[i].x > self.x then
             self.stars[i].x = 0
+        elseif vertical < 0 and self.stars[i].x < 0 then
+            self.stars[i].x = self.x
         end
 
         -- vertical movement
         self.stars[i].y = self.stars[i].y + horizontal * self.stars[i].velocity
-        if self.stars[i].y > self.y then
+        if horizontal > 0 and self.stars[i].y > self.y then
             self.stars[i].y = 0
+        elseif horizontal < 0 and self.stars[i].y < 0 then
+            self.stars[i].y = self.y
         end
     end
 end
