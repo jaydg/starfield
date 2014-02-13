@@ -13,7 +13,7 @@ function Starfield:init( count, speed, x, y )
     self.center_x = self.x / 2
     self.center_y = self.y / 2
     self.max_distance = math.sqrt(self.center_x * self.center_x
-        + self.center_y + self.center_y)
+                                  + self.center_y + self.center_y)
 
     self.stars = {}
 
@@ -81,12 +81,17 @@ function Starfield:movePolar(dt)
 
     for i=1, #self.stars do
         self.stars[i].x = self.center_x + self.stars[i].distance
-            * math.sin(self.stars[i].angle)
+                            * math.sin(self.stars[i].angle)
         self.stars[i].y = self.center_y + self.stars[i].distance
-            * math.cos(self.stars[i].angle)
+                            * math.cos(self.stars[i].angle)
 
-        self.stars[i].distance = self.stars[i].distance + 1
-        if self.stars[i].distance > self.max_distance then
+        self.stars[i].distance = self.stars[i].distance
+                                    + self.stars[i].velocity
+
+        if (self.stars[i].x > self.x
+                or self.stars[i].x < 0
+                or self.stars[i].y > self.y
+                or self.stars[i].y < 0) then
             self.stars[i].distance = 10
         end
     end
