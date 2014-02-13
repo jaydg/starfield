@@ -4,8 +4,8 @@ Starfield = Class{}
 
 function Starfield:init( count, speed, x, y )
     count = count or 100
-    self.x = x or love.graphics.getHeight()
-    self.y = y or love.graphics.getWidth()
+    self.x = x or love.graphics.getWidth()
+    self.y = y or love.graphics.getHeight()
     self.speed = speed or 0.05
 
     self.dtotal = 0
@@ -37,9 +37,9 @@ function Starfield:init( count, speed, x, y )
    end
 end
 
-function Starfield:updateCartesian(dt, vertical, horizontal)
-    vertical = vertical or 0
+function Starfield:updateCartesian(dt, horizontal, vertical)
     horizontal = horizontal or 0
+    vertical = vertical or 0
 
     self.dtotal = self.dtotal + dt
 
@@ -52,19 +52,19 @@ function Starfield:updateCartesian(dt, vertical, horizontal)
 
     for i=1, #self.stars do
         -- horizontal movement
-        self.stars[i].x = self.stars[i].x + vertical * self.stars[i].velocity
-        if vertical > 0 and self.stars[i].x > self.x then
-            self.stars[i].x = 0
-        elseif vertical < 0 and self.stars[i].x < 0 then
-            self.stars[i].x = self.x
+        self.stars[i].x = self.stars[i].x + horizontal * self.stars[i].velocity
+        if horizontal > 0 and self.stars[i].x > self.x then
+            self.stars[i].x = 5
+        elseif horizontal < 0 and self.stars[i].x < 0 then
+            self.stars[i].x = self.x - 5
         end
 
         -- vertical movement
-        self.stars[i].y = self.stars[i].y + horizontal * self.stars[i].velocity
-        if horizontal > 0 and self.stars[i].y > self.y then
-            self.stars[i].y = 0
-        elseif horizontal < 0 and self.stars[i].y < 0 then
-            self.stars[i].y = self.y
+        self.stars[i].y = self.stars[i].y + vertical * self.stars[i].velocity
+        if vertical > 0 and self.stars[i].y > self.y then
+            self.stars[i].y = 5
+        elseif vertical < 0 and self.stars[i].y < 0 then
+            self.stars[i].y = self.y - 5
         end
     end
 end
@@ -104,7 +104,7 @@ function Starfield:draw()
     for i=1, #self.stars do
         love.graphics.setColor(self.stars[i].color)
         love.graphics.setPointSize(self.stars[i].size)
-        love.graphics.point(self.stars[i].y, self.stars[i].x)
+        love.graphics.point(self.stars[i].x, self.stars[i].y)
    end
 
    love.graphics.setPointStyle(ps)
