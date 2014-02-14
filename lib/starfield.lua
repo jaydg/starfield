@@ -94,7 +94,10 @@ function Starfield:updatePolar(dt)
                 or self.stars[i].x < 0
                 or self.stars[i].y > self.y
                 or self.stars[i].y < 0) then
+            -- the star has left the visible field - bring it back in,
+            -- but assign a new angle to keep the starfield interesting
             self.stars[i].distance = 15
+            self.stars[i].angle = math.pi * 2 * love.math.random()
         end
     end
 end
