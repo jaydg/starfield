@@ -1,23 +1,26 @@
+Gamestate = require("lib.hump.gamestate")
 require("lib.starfield")
 
-function love.load()
-    stars = Starfield()
+-- one gamestate for each type of starfield
+local cartesian = {}
+local polar = {}
 
-    move_x = 0
-    move_y = 1
-
-    love.mouse.setX(stars.center_x)
-    love.mouse.setY(stars.center_y)
+function cartesian:init()
+    self.stars = Starfield()
+    self.move_x = 0
+    self.move_y = 1
 end
 
-function love.draw()
-    stars:draw()
-
-    love.graphics.print("Cartesian Starfield", 10, love.graphics.getHeight() - 30)
-    love.graphics.print("dx: " .. move_x .. "; dy: " .. move_y, 10, love.graphics.getHeight() - 17)
+function cartesian:mousepressed(x, y, button)
+    Gamestate.switch(polar)
 end
 
-function love.update(dt)
+function cartesian:draw()
+    self.stars:draw()
+    love.graphics.print("Cartesian Starfield", 10, love.graphics.getHeight() - 17)
+end
+
+function cartesian:update(dt)
     cx = love.graphics.getWidth() / 2
     cy = love.graphics.getHeight() / 2
 
@@ -25,16 +28,42 @@ function love.update(dt)
     my = love.mouse.getY()
 
     if mx < cx - 10 or mx > cx + 10 then
-        move_x = math.ceil((mx - cx) / 100)
+        self.move_x = math.ceil((mx - cx) / 100)
     else
-        move_x = 0
+        self.move_x = 0
     end
 
     if my < cy - 10 or my > cy + 10 then
-        move_y = math.ceil((my - cy) / 100)
+        self.move_y = math.ceil((my - cy) / 100)
     else
-        move_y = 0
+        self.move_y = 0
     end
 
-    stars:updateCartesian(dt, move_x, move_y)
+    self.stars:updateCartesian(dt, self.move_x, self.move_y)
+end
+
+function polar:init()
+    self.stars = Starfield(200, 0.02)
+end
+
+function polar:mousepressed(x, y, button)
+    Gamestate.switch(cartesian)
+end
+
+function polar:draw()
+    self.stars:draw()
+    love.graphics.print("Polar Starfield", 10, love.graphics.getHeight() - 17)
+end
+
+function polar:update(dt)
+    mx = love.mouse.getX()
+    my = love.mouse.getY()
+
+    self.stars:updateCenter(mx, my)
+    self.stars:updatePolar(dt)
+end
+
+function love.load()
+	Gamestate.registerEvents()
+    Gamestate.switch(cartesian)
 end

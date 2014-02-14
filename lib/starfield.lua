@@ -6,15 +6,9 @@ function Starfield:init( count, speed, x, y )
     count = count or 100
     self.x = x or love.graphics.getWidth()
     self.y = y or love.graphics.getHeight()
+    self:updateCenter(self.x / 2, self.y / 2)
     self.speed = speed or 0.05
-
     self.dtotal = 0
-    -- required for polar starfields
-    self.center_x = self.x / 2
-    self.center_y = self.y / 2
-    self.max_distance = math.sqrt(self.center_x * self.center_x
-                                  + self.center_y + self.center_y)
-
     self.stars = {}
 
     for i=1, count do
@@ -35,6 +29,14 @@ function Starfield:init( count, speed, x, y )
             }
         }
    end
+end
+
+function Starfield:updateCenter(x, y)
+    -- required for polar starfields
+    self.center_x = x or self.x / 2
+    self.center_y = y or self.y / 2
+    self.max_distance = math.sqrt(self.center_x * self.center_x
+                                  + self.center_y + self.center_y)
 end
 
 function Starfield:updateCartesian(dt, horizontal, vertical)
@@ -92,7 +94,7 @@ function Starfield:updatePolar(dt)
                 or self.stars[i].x < 0
                 or self.stars[i].y > self.y
                 or self.stars[i].y < 0) then
-            self.stars[i].distance = 10
+            self.stars[i].distance = 15
         end
     end
 end
