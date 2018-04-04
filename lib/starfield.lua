@@ -103,14 +103,9 @@ function Starfield:updatePolar(dt)
 end
 
 function Starfield:draw()
-    local ps = love.graphics.getPointStyle()
-    love.graphics.setPointStyle("smooth")
-
     for i=1, #self.stars do
         love.graphics.setColor(self.stars[i].color)
         love.graphics.setPointSize(self.stars[i].size)
-        love.graphics.point(self.stars[i].x, self.stars[i].y)
+        love.graphics.points(self.stars[i].x, self.stars[i].y)
    end
-
-   love.graphics.setPointStyle(ps)
 end
